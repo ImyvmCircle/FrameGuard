@@ -51,7 +51,7 @@ public class FrameGuardListener implements Listener{
   
   /**
    * On block break
-   * @param BlockBreakEvent BlockBreakEvent
+   * @param event BlockBreakEvent
    */
   @EventHandler(priority=EventPriority.HIGHEST)
   public void onBlockBreak(BlockBreakEvent event) {
@@ -77,7 +77,7 @@ public class FrameGuardListener implements Listener{
   
   /**
    * On block burn
-   * @param BlockBurnEvent BlockBurnEvent
+   * @param event BlockBurnEvent
    */
   @EventHandler(priority=EventPriority.HIGHEST)
   public void onBlockBurn(BlockBurnEvent event) {
@@ -99,7 +99,7 @@ public class FrameGuardListener implements Listener{
   
   /**
    * On block fade
-   * @param BlockFadeEvent BlockFadeEvent
+   * @param event BlockFadeEvent
    */
   @EventHandler(priority=EventPriority.HIGHEST)
   public void onBlockFade(BlockFadeEvent event) {
@@ -120,7 +120,7 @@ public class FrameGuardListener implements Listener{
   
   /**
    * On block pistion extend
-   * @param BlockPistonExtendEvent BlockPistonExtendEvent
+   * @param event BlockPistonExtendEvent
    */
   @EventHandler(priority=EventPriority.HIGHEST)
   public void onBlockPistonExtend(BlockPistonExtendEvent event) {
@@ -157,29 +157,46 @@ public class FrameGuardListener implements Listener{
   
   /**
    * On block piston retract
-   * @param BlockPistonRetractEvent BlockPistonRetractEvent
+   * @param event BlockPistonRetractEvent
    */
   @EventHandler(priority=EventPriority.HIGHEST)
   public void onBlockPistonRetract(BlockPistonRetractEvent event) {
     if(DEBUG) {
       frameguard.getLogger().info("Called: onBlockPistonRetract");
     }
-    
-    Block block = event.getBlock().getRelative(event.getDirection());
-    if ( block == null || block.isEmpty() || block.isLiquid() ) {
+
+    Location extLoc = event.getBlock().getRelative(event.getDirection()).getLocation();
+    if (  frameguard.getFgDatabase().isLocked(extLoc) ) {
+      event.setCancelled(true);
       return;
     }
-    for ( BlockFace blockFace : new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST} ) {
-      if(frameguard.getFgDatabase().isLocked(block.getRelative(blockFace).getLocation())){
-        event.setCancelled(true);
-        return;
+
+    for ( Block block : event.getBlocks() ) {
+      // Confirm lock of moving block
+      for (BlockFace blockFace : new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST}) {
+        if (frameguard.getFgDatabase().isLocked(block.getRelative(blockFace).getLocation())) {
+          event.setCancelled(true);
+          return;
+        }
       }
     }
+    
+//    Block block = event.getBlock().getRelative(event.getDirection());
+////    Block block = event.getBlock();
+//    if ( block == null || block.isEmpty() || block.isLiquid() ) {
+//      return;
+//    }
+//    for ( BlockFace blockFace : new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST} ) {
+//      if(frameguard.getFgDatabase().isLocked(block.getRelative(blockFace).getLocation())){
+//        event.setCancelled(true);
+//        return;
+//      }
+//    }
   }
-  
+
   /**
    * On block place
-   * @param BlockPlaceEvent BlockPlaceEvent
+   * @param event BlockPlaceEvent
    */
   @EventHandler(priority=EventPriority.HIGHEST)
   public void onBlockPlace(BlockPlaceEvent event){
@@ -188,10 +205,10 @@ public class FrameGuardListener implements Listener{
     }
     
     Block block = event.getBlock();
-    if(!FrameGuardUtility.isContinue(block)){
-      return;
-    }
-    
+//    if(!FrameGuardUtility.isContinue(block)){
+//      return;
+//    }
+
     if(frameguard.getFgDatabase().isLocked(block.getLocation())){
       frameguard.getLogger().log(Level.INFO, frameguard.getConfig().getString("message-block-is-locked"));
       event.setCancelled(true);
@@ -201,7 +218,7 @@ public class FrameGuardListener implements Listener{
   
   /**
    * On entity damage by entity
-   * @param EntityDamageByEntityEvent EntityDamageByEntityEvent
+   * @param event EntityDamageByEntityEvent
    */
   @EventHandler(priority=EventPriority.HIGHEST)
   public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
@@ -250,7 +267,7 @@ public class FrameGuardListener implements Listener{
   
   /**
    * On hanging break
-   * @param HangingBreakEvent HangingBreakEvent
+   * @param event HangingBreakEvent
    */
   @EventHandler(priority=EventPriority.HIGHEST)
   public void onHangingBreak(HangingBreakEvent event) {
@@ -265,25 +282,25 @@ public class FrameGuardListener implements Listener{
     
     if( frameguard.getFgDatabase().isLocked(hanging.getLocation()) ){
       
-      if(hanging.getLocation().getBlock().getType() != Material.AIR){
-        if(!hanging.getLocation().getBlock().isLiquid()) {
-          for (ItemStack drop : hanging.getLocation().getBlock().getDrops() ) {
-            // Drop the block of the locked place
-            hanging.getWorld().dropItemNaturally(hanging.getLocation(), drop);
-          }
-          // Replace AIR
-          hanging.getLocation().getBlock().setType(Material.AIR);
-        } else {
-          hanging.getLocation().getBlock().setType(Material.AIR);
-        }
-      }
-      
-      Location loc = frameguard.getFgDatabase().getAttachedLocation(hanging.getLocation());
-      Material attachedMaterial = frameguard.getFgDatabase().getAttachedMaterial(hanging.getLocation());
-      Block restoredBlock = loc.getBlock();
-      if(restoredBlock.getType() != attachedMaterial) {
-        restoredBlock.setType(attachedMaterial);
-      }
+//      if(hanging.getLocation().getBlock().getType() != Material.AIR){
+//        if(!hanging.getLocation().getBlock().isLiquid()) {
+//          for (ItemStack drop : hanging.getLocation().getBlock().getDrops() ) {
+//            // Drop the block of the locked place
+//            hanging.getWorld().dropItemNaturally(hanging.getLocation(), drop);
+//          }
+//          // Replace AIR
+//          hanging.getLocation().getBlock().setType(Material.AIR);
+//        } else {
+//          hanging.getLocation().getBlock().setType(Material.AIR);
+//        }
+//      }
+//
+//      Location loc = frameguard.getFgDatabase().getAttachedLocation(hanging.getLocation());
+//      Material attachedMaterial = frameguard.getFgDatabase().getAttachedMaterial(hanging.getLocation());
+//      Block restoredBlock = loc.getBlock();
+//      if(restoredBlock.getType() != attachedMaterial) {
+//        restoredBlock.setType(attachedMaterial);
+//      }
       
       String blockFace = frameguard.getFgDatabase().getBlockFace(hanging.getLocation());
       if(blockFace.equals(hanging.getFacing().name())) {
@@ -294,7 +311,7 @@ public class FrameGuardListener implements Listener{
   
   /**
    * On hanging break by entity
-   * @param HangingBreakByEntityEvent HangingBreakByEntityEvent
+   * @param event HangingBreakByEntityEvent
    */
   @EventHandler(priority=EventPriority.HIGHEST)
   public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
@@ -327,7 +344,7 @@ public class FrameGuardListener implements Listener{
   
   /**
    * On hanging place
-   * @param HangingPlaceEvent HangingPlaceEvent
+   * @param event HangingPlaceEvent
    */
   @EventHandler(priority=EventPriority.HIGHEST)
   public void onHangingPlace(HangingPlaceEvent event) {
@@ -358,7 +375,7 @@ public class FrameGuardListener implements Listener{
   
   /**
    * On player interact entity
-   * @param PlayerInteractEntityEvent PlayerInteractEntityEvent
+   * @param event PlayerInteractEntityEvent
    */
   @EventHandler(priority=EventPriority.HIGHEST)
   public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {

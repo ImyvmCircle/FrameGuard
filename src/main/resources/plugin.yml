@@ -3,6 +3,7 @@ version: 0.2
 description: FrameGuard plugin
 author: kubotan
 website: http://gorogoro.space/
+api-version: 1.13
 
 main: space.gorogoro.frameguard.FrameGuard
 

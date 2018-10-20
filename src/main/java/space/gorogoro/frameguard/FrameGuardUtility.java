@@ -29,7 +29,7 @@ public class FrameGuardUtility {
   
   /**
    * Output stack trace to log file.
-   * @param Exception Exception
+   * @param e Exception
    */
   public static void logStackTrace(Exception e){
       StringWriter sw = new StringWriter();
@@ -41,7 +41,7 @@ public class FrameGuardUtility {
   
   /**
    * Determine whether processing can be continued.
-   * @param Hanging Hanging
+   * @param hanging Hanging
    * @return boolean true:Continue false:Stop
    */
   public static boolean isContinue(Hanging hanging){
@@ -55,7 +55,7 @@ public class FrameGuardUtility {
   
   /**
    * Determine whether processing can be continued.
-   * @param Entity Entity
+   * @param entity Entity
    * @return boolean true:Continue false:Stop
    */
   public static boolean isContinue(Entity entity){
@@ -69,7 +69,7 @@ public class FrameGuardUtility {
   
   /**
    * Determine whether processing can be continued.
-   * @param Block Block
+   * @param block Block
    * @return boolean true:Continue false:Stop
    */
   public static boolean isContinue(Block block) {
@@ -81,9 +81,7 @@ public class FrameGuardUtility {
           BlockFace.WEST,
       }) {
         Block relative = block.getRelative(blockface);
-        if (relative.getType() == Material.ITEM_FRAME) {
-          return true;
-        } else if (relative.getType() == Material.ITEM_FRAME) {
+        if (relative.getType().equals(Material.ITEM_FRAME)) {
           return true;
         }
       }
@@ -93,7 +91,7 @@ public class FrameGuardUtility {
   
   /**
    * Determine whether punch is being processed.
-   * @param Player Player
+   * @param player Player
    * @return boolean true:That's right false:That's not it
    */
   public static boolean isInPunch(Player player){
@@ -109,8 +107,8 @@ public class FrameGuardUtility {
   
   /**
    * Remove punch processing.
-   * @param Player Player
-   * @param FrameGuard FrameGuard
+   * @param player Player
+   * @param frameguard FrameGuard
    */
   public static void removeAllPunch(Player player, FrameGuard frameguard){
     player.removeMetadata(FrameGuardCommand.META_LOCK, frameguard);
@@ -120,8 +118,8 @@ public class FrameGuardUtility {
   
   /**
    * Send message to player
-   * @param CommandSender CommandSender
-   * @param String message
+   * @param sender CommandSender
+   * @param message message
    */
   public static void sendMessage(CommandSender sender, String message){
     sender.sendMessage((Object)ChatColor.DARK_RED + "[FrameGuard]" + " " + (Object)ChatColor.RED + message);
@@ -129,7 +127,7 @@ public class FrameGuardUtility {
   
   /**
    * Get attached block by hanging
-   * @param Hanging Hanging
+   * @param hanging Hanging
    * @return Block Attached block
    */
   public static Block getAttachedBlockByHanging(Hanging hanging){
@@ -145,7 +143,7 @@ public class FrameGuardUtility {
   
   /**
    * Get attached block by block
-   * @param Block Break block
+   * @param breakBlock Break block
    * @return Block Attached block
    */
   public static Block getAttachedBlockByBlock(Block breakBlock){
@@ -183,7 +181,7 @@ public class FrameGuardUtility {
   
   /**
    * Get ItemFrame by location.
-   * @param Location Location
+   * @param loc Location
    * @return ItemFrame ItemFrame
    */
   public static ItemFrame getItemFrame(Location loc) {
@@ -199,7 +197,7 @@ public class FrameGuardUtility {
   
   /**
    * Get Painting by location.
-   * @param Location Location
+   * @param loc Location
    * @return Painting Painting
    */
   public static Painting getPainting(Location loc) {
